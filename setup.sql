@@ -1,4 +1,55 @@
--- Core Tables
+-- Admin system tables
+CREATE TABLE IF NOT EXISTS `bans` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `license` VARCHAR(255) NOT NULL,
+  `reason` VARCHAR(255) NOT NULL,
+  `banned_by` VARCHAR(255) NOT NULL,
+  `expire` INT(11) DEFAULT NULL,
+  `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `license` (`license`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE IF NOT EXISTS `admin_logs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `admin` VARCHAR(255) NOT NULL,
+  `action` VARCHAR(50) NOT NULL,
+  `target` VARCHAR(255) NOT NULL,
+  `details` TEXT DEFAULT NULL,
+  `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `admin` (`admin`),
+  KEY `target` (`target`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Logging system
+CREATE TABLE IF NOT EXISTS `server_logs` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `level` VARCHAR(10) NOT NULL,
+  `message` TEXT NOT NULL,
+  `resource` VARCHAR(50) NOT NULL,
+  `data` TEXT DEFAULT NULL,
+  `timestamp` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `resource` (`resource`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- Character system
+CREATE TABLE IF NOT EXISTS `characters` (
+  `id` INT(11) NOT NULL AUTO_INCREMENT,
+  `license` VARCHAR(255) NOT NULL,
+  `firstname` VARCHAR(50) NOT NULL,
+  `lastname` VARCHAR(50) NOT NULL,
+  `gender` VARCHAR(10) NOT NULL,
+  `dob` DATE NOT NULL,
+  `appearance` LONGTEXT DEFAULT NULL,
+  `metadata` LONGTEXT DEFAULT NULL,
+  `last_updated` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `license` (`license`),
+  KEY `name` (`firstname`, `lastname`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE IF NOT EXISTS `players` (
   `id` INT(11) NOT NULL AUTO_INCREMENT,
   `citizenid` VARCHAR(50) NOT NULL,

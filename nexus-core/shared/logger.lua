@@ -1,45 +1,76 @@
-local Logger = {}
+local Logger = {
+    Levels = {
+        DEBUG = 0,
+        INFO = 1,
+        WARN = 2,
+        ERROR = 3
+    },
+    ResourceName = GetCurrentResourceName()
+}
 
-Logger.Log = function(message, level, resource)
-    level = level or 'info'
-    resource = resource or GetCurrentResourceName()
-    
-    local timestamp = os.date('%Y-%m-%d %H:%M:%S')
-    local formatted = string.format('[%s] [%s] [%s] %s', timestamp, string.upper(level), resource, message)
-    
-    if level == 'error' then
-        print('\27[31m' .. formatted .. '\27[0m')
-    elseif level == 'warning' then
-        print('\27[33m' .. formatted .. '\27[0m')
-    elseif level == 'success' then
-        print('\27[32m' .. formatted .. '\27[0m')
-    elseif level == 'info' then
-        print('\27[36m' .. formatted .. '\27[0m')
-    else
-        print(formatted)
+function Logger.Log(level, message, data)
+    if not message or type(message) ~= 'string' then
+        error('Invalid log message')
+    end
+
+    local logEntry = {
+        level = level,
+        message = message,
+        resource = Logger.ResourceName,
+        timestamp = os.time(),
+        data = data or nil
+    }
+
+    -- Console output
+    local color = Logger.GetLogColor(level)
+    print(('^%d[%s] %s^0'):format(color, level, message))
+
+    -- Database storage
+    if Config.LogToDatabase then
+        MySQL.insert.await(
+            'INSERT INTO server_logs (level, message, resource, data) VALUES (?, ?, ?, ?)',
+            {level, message, Logger.ResourceName, json.encode(data)}
+        )
+    end
+
+    -- Discord webhook
+    if Config.DiscordWebhooks?.logs then
+        TriggerEvent('nexus:discord:log', {
+            title = ('[%s] %s'):format(level, Logger.ResourceName),
+            description = message,
+            color = color,
+            fields = data and {
+                {name = 'Details', value = json.encode(data)}
+            } or nil
+        })
     end
 end
 
-Logger.Debug = function(message, resource)
-    if Config.DebugMode then
-        Logger.Log(message, 'debug', resource)
-    end
+function Logger.GetLogColor(level)
+    local colors = {
+        [Logger.Levels.DEBUG] = 7,  -- Light gray
+        [Logger.Levels.INFO] = 2,   -- Green
+        [Logger.Levels.WARN] = 3,   -- Yellow
+        [Logger.Levels.ERROR] = 1    -- Red
+    }
+    return colors[level] or 7
 end
 
-Logger.Error = function(message, resource)
-    Logger.Log(message, 'error', resource)
+-- Helper methods
+function Logger.Debug(msg, data)
+    Logger.Log(Logger.Levels.DEBUG, msg, data)
 end
 
-Logger.Warning = function(message, resource)
-    Logger.Log(message, 'warning', resource)
+function Logger.Info(msg, data)
+    Logger.Log(Logger.Levels.INFO, msg, data)
 end
 
-Logger.Success = function(message, resource)
-    Logger.Log(message, 'success', resource)
+function Logger.Warn(msg, data)
+    Logger.Log(Logger.Levels.WARN, msg, data)
 end
 
-Logger.Info = function(message, resource)
-    Logger.Log(message, 'info', resource)
+function Logger.Error(msg, data)
+    Logger.Log(Logger.Levels.ERROR, msg, data)
 end
 
 return Logger
