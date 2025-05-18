@@ -1,0 +1,118 @@
+:root {
+    --primary: #2e86de;
+    --secondary: #222f3e;
+    --success: #1dd1a1;
+    --danger: #ee5253;
+    --warning: #feca57;
+    --dark: #222f3e;
+    --light: #c8d6e5;
+    --white: #ffffff;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+    user-select: none;
+}
+
+body {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: transparent;
+}
+
+#app {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+/* Inventory Styles */
+#inventory {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 800px;
+    height: 600px;
+    background: rgba(34, 47, 62, 0.95);
+    border-radius: 10px;
+    border: 2px solid var(--primary);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: 15px;
+}
+
+.inventory-header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 10px;
+    border-bottom: 1px solid var(--primary);
+}
+
+.inventory-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    grid-gap: 10px;
+    padding: 20px 0;
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+.inventory-slot {
+    background: rgba(200, 214, 229, 0.1);
+    border: 1px solid rgba(200, 214, 229, 0.3);
+    border-radius: 5px;
+    aspect-ratio: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    position: relative;
+}
+
+.inventory-slot:hover {
+    background: rgba(200, 214, 229, 0.2);
+    border-color: var(--primary);
+}
+
+.item-count {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    font-size: 12px;
+    background: var(--dark);
+    padding: 2px 5px;
+    border-radius: 10px;
+}
+
+/* Notification System */
+#notifications {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.notification {
+    background: rgba(34, 47, 62, 0.9);
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    border-left: 5px solid var(--primary);
+    animation: slideIn 0.5s forwards;
+}
+
+@keyframes slideIn {
+    from { transform: translateX(100%); }
+    to { transform: translateX(0); }
+}

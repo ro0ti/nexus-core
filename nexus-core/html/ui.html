@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexusCore</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Inventory UI -->
+        <div id="inventory" class="hidden">
+            <div class="inventory-header">
+                <h2>INVENTORY</h2>
+                <div class="weight">0/50kg</div>
+            </div>
+            <div class="inventory-grid"></div>
+            <div class="inventory-footer">
+                <div class="item-info"></div>
+            </div>
+        </div>
+
+        <!-- Notification System -->
+        <div id="notifications"></div>
+
+        <!-- Phone UI -->
+        <div id="phone" class="hidden">
+            <div class="phone-header"></div>
+            <div class="phone-apps"></div>
+        </div>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>
